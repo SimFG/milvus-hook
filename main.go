@@ -9,19 +9,19 @@ func init() {
 	log.Println("milvus-hook: hook plugin init...")
 }
 
-var Hook = &hook{}
+var Hook = hook{}
 
 type hook struct{}
 
-func (h *hook) Init(params map[string]interface{}) error {
+func (h hook) Init(params map[string]interface{}) error {
 	return nil
 }
 
-func (h *hook) Before(req interface{}) error {
+func (h hook) Before(req interface{}) error {
 	switch req.(type) {
-	case milvuspb.CreateCollectionRequest:
+	case *milvuspb.CreateCollectionRequest:
 		log.Println("milvus-hook: CreateCollectionRequest")
-		cr := req.(milvuspb.CreateCollectionRequest)
+		cr := req.(*milvuspb.CreateCollectionRequest)
 		cr.CollectionName = "Hook"
 	default:
 		log.Println("milvus-hook: default")
@@ -30,6 +30,6 @@ func (h *hook) Before(req interface{}) error {
 	return nil
 }
 
-func (h *hook) After(result interface{}, err error) error {
+func (h hook) After(result interface{}, err error) error {
 	return nil
 }
